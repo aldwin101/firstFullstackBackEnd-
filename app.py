@@ -5,28 +5,26 @@ from flask import Flask, request, Response
 import json
 import sys
 
-cursor = None
-conn = None
-
 app = Flask(__name__)
 
-try:
-    conn = mariadb.connect(user=dbcreds.user,
-                        password=dbcreds.password,
-                        host=dbcreds.host,
-                        port=dbcreds.port,
-                        database=dbcreds.database
-                        )
-    cursor = conn.cursor()
 
-    @app.route("/api")
-    def home():
-        return "You can use a simple request for GET, POST, PATCH and DELETE using"
 
-    @app.route('/api/posts', methods=['GET', 'POST', 'PATCH', 'DELETE'])
+@app.route("/api")
+def home():
+    return "You can use a simple request for GET, POST, PATCH and DELETE using"
 
-        # posts handler
-    def posts():
+@app.route('/api/posts', methods=['GET', 'POST', 'PATCH', 'DELETE'])
+
+    # posts handler
+def posts():
+    try:
+        conn = mariadb.connect(user=dbcreds.user,
+                            password=dbcreds.password,
+                            host=dbcreds.host,
+                            port=dbcreds.port,
+                            database=dbcreds.database
+                            )
+        cursor = conn.cursor()
         if request.method == 'GET':
             cursor.execute('SELECT * FROM posts')
             info = cursor.fetchall()
@@ -68,27 +66,27 @@ try:
             return Response(json.dumps('Successfully deleted the post'),
                             mimetype='application/json',
                             status=200)
-        
-except mariadb.DataError:
-    print("Something wrong with your data")
-except mariadb.OperationalError:
-    print("Something wrong with the connection")
-except mariadb.ProgrammingError:
-    print("Your query was wrong")
-except mariadb.IntegrityError:
-    print("Your query would have broken the database and we stopped it")
-except:
-    print("Something went wrong")
-finally:
-    if (cursor != None):
-        cursor.close()
-    else:
-        print("There was never a cursor to begin with")
-    if (conn != None):
-        conn.rollback()
-        conn.close()
-    else:
-        print("The connection never opened, nothing to close here")
+    
+    except mariadb.DataError:
+        print("Something wrong with your data")
+    except mariadb.OperationalError:
+        print("Something wrong with the connection")
+    except mariadb.ProgrammingError:
+        print("Your query was wrong")
+    except mariadb.IntegrityError:
+        print("Your query would have broken the database and we stopped it")
+    except:
+        print("Something went wrong")
+    finally:
+        if (cursor != None):
+            cursor.close()
+        else:
+            print("There was never a cursor to begin with")
+        if (conn != None):
+            conn.rollback()
+            conn.close()
+        else:
+            print("The connection never opened, nothing to close here")
 
 if (len(sys.argv) > 1):
     mode = sys.argv[1]
