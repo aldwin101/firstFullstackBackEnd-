@@ -5,6 +5,9 @@ from flask import Flask, request, Response
 import json
 import sys
 
+cursor = None
+conn = None
+
 app = Flask(__name__)
 
 try:
@@ -34,8 +37,7 @@ try:
             for user in info:
                 userData = {
                     'userId' : user[0],
-                    'username' : user[1],
-                    'content' : user[2]
+                    'content' : user[1]
                 }
                 infoData.append(userData)
 
@@ -45,8 +47,8 @@ try:
 
         if request.method == 'POST':
             data = request.json
-            cursor.execute('INSERT INTO posts (username, content) VALUES (?,?)', 
-                            [data.get('username'), data.get('content')])
+            cursor.execute('INSERT INTO posts(content) VALUES (?)', 
+                            [data.get('content')])
             conn.commit()
             return Response(json.dumps('Successfully uploaded a post'),
                             mimetype='application/json',
