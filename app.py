@@ -19,8 +19,6 @@ try:
                         )
     cursor = conn.cursor()
 
-    @app.route("/")
-
     @app.route("/api")
     def home():
         return "You can use a simple request for GET, POST, PATCH and DELETE using"
