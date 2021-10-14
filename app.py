@@ -12,6 +12,9 @@ app = Flask(__name__)
     # posts handler
 def posts():
     try:
+        cursor = None
+        conn = None
+        
         conn = mariadb.connect(user=dbcreds.user,
                             password=dbcreds.password,
                             host=dbcreds.host,
