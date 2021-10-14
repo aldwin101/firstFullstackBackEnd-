@@ -7,12 +7,6 @@ import sys
 
 app = Flask(__name__)
 
-
-
-@app.route("/api")
-def home():
-    return "You can use a simple request for GET, POST, PATCH and DELETE using"
-
 @app.route('/api/posts', methods=['GET', 'POST', 'PATCH', 'DELETE'])
 
     # posts handler
@@ -42,7 +36,7 @@ def posts():
                             status=200)
 
         if request.method == 'POST':
-            data = request.json
+            data = request.json 
             cursor.execute('INSERT INTO posts(content) VALUES (?)', 
                             [data.get('content')])
             conn.commit()
