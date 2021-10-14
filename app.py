@@ -97,9 +97,9 @@ if (len(sys.argv) > 1):
         bjoern.run(app, host, port)
     elif(mode == "testing"):
         from flask_cors import CORS
-        CORS(app)
+        # CORS(app)
         print("Server is running in testing mode, switch to production when needed")
-        app.run(debug=True) 
+        # app.run(debug=True) 
     else:
         print("Invalid mode argument, exiting")
         exit() 
